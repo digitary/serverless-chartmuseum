@@ -4,7 +4,10 @@
 *.dll
 *.so
 *.dylib
-
+bin
+*.tfstate*
+.terraform
+.idea
 # Test binary, built with `go test -c`
 *.test
 
