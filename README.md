@@ -13,4 +13,4 @@ Steps to deploy chartmuseum:
 ``git clone https://github.com/RhynoVDS/serverless-chartmuseum``
 2. Within the cloned directory, build the solution using the makefile command: 
 ``make build-lambda``
-3. Use terraform to call the module in deploy/aws. See the file in this repo deploy_example/deploy.tf which shows what terraform to write.
+3. Use terraform to call the module in deploy/aws. See the file in this repo deploy_example/deploy.tf for an example terraform file.
