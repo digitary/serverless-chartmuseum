@@ -4,3 +4,7 @@ variable "s3_bucket" {
 variable "s3_bucket_region" {
   description = "The region the bucket is in"
 }
+variable "log_level" {
+  default = "INFO"
+  description = "The lambda log level"
+}

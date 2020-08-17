@@ -97,6 +97,7 @@ resource "aws_lambda_function" "chartmuseum" {
       STORAGE = "amazon"
       STORAGE_AMAZON_BUCKET = var.s3_bucket
       STORAGE_AMAZON_REGION = var.s3_bucket_region
+      LOG_LEVEL = upper(var.log_level)
     }
   }
 }

@@ -15,6 +15,7 @@ import (
 	"helm.sh/chartmuseum/pkg/config"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"reflect"
 	"strings"
 	"time"
@@ -220,13 +221,18 @@ func handleRequest(req events.APIGatewayProxyRequest) (events.APIGatewayProxyRes
 
 	return returnProxyResult, nil
 }
+func debugEnabled() bool{
+	return os.Getenv("LOG_LEVEL") == "DEBUG"
+}
+
 func main() {
-	logs.Debug("Lambda called")
 
 	logs, _ = cm_logger.NewLogger(cm_logger.LoggerOptions{
-		Debug:   true,
+		Debug:   debugEnabled(),
 		LogJSON: false,
 	})
+
+	logs.Debug("Lambda called")
 
 	if reflect.ValueOf(httpServer).IsZero() && !started {
 		go startChartMuseum()
