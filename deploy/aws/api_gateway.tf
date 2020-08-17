@@ -1,6 +1,5 @@
 resource "aws_apigatewayv2_api" "chartmuseum_api_gateway" {
   name        = "chartmuseum-${random_string.random_name.result}"
-  description = "This is my API for demonstration purposes"
   protocol_type = "HTTP"
 
 }
