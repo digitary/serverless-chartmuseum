@@ -2,7 +2,7 @@
 Run serverless Helm repositories using the opensource chart museum project.
 
 ### AWS Implementation
-The AWS serverless implementation runs chartmuseum in a lambda function. Using API Gateway proxy, all requests are send to chartmuseum 
+The AWS serverless implementation runs chartmuseum in a lambda function. Using API Gateway proxy, all requests are sent to chartmuseum 
 which is initialised inside of a lambda. 
 
 ### Deployment
