@@ -4,6 +4,6 @@ provider "aws" {
 
 module "deploy" {
   source = "../deploy/aws"
-  s3_bucket = "digitary-core-dev-chart-museum"
+  s3_bucket = "bucketToDeploy"
   s3_bucket_region = "eu-west-1"
 }
