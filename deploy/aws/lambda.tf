@@ -1,14 +1,14 @@
 resource "random_string" "random_name" {
-  length = 5
+  length  = 5
   special = false
-  upper = true
-  lower = false
+  upper   = true
+  lower   = false
 }
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 resource "aws_iam_policy" "iam_policy_for_lambda" {
-  name = "chartmuseum-${random_string.random_name.result}-policy"
+  name   = "chartmuseum-${random_string.random_name.result}-policy"
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -94,12 +94,12 @@ resource "aws_lambda_function" "chartmuseum" {
 
   environment {
     variables = {
-      STORAGE = "amazon"
+      STORAGE               = "amazon"
       STORAGE_AMAZON_BUCKET = var.s3_bucket
       STORAGE_AMAZON_REGION = var.s3_bucket_region
-      BASIC_AUTH_USER = var.basic_auth_user
-      BASIC_AUTH_PASS = var.basic_auth_password
-      LOG_LEVEL = upper(var.log_level)
+      BASIC_AUTH_USER       = var.basic_auth_user
+      BASIC_AUTH_PASS       = var.basic_auth_password
+      LOG_LEVEL             = upper(var.log_level)
     }
   }
 }
