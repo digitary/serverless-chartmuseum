@@ -4,7 +4,7 @@ provider "aws" {
 
 module "deploy" {
   source           = "../deploy/aws"
-  s3_bucket        = "an existing s3 bucket to store the charts in"
-  s3_bucket_region = "eu-west-1"
+  s3_bucket        = "your s3 bucket name here"
+  s3_bucket_region = "your s3 bucket's region here"
 }
 

@@ -146,7 +146,7 @@ func cliHandler(c *cli.Context) {
 	httpServer.ListenAndServe()
 }
 func startChartMuseum() {
-	logs.Debug("getHTTPServer called")
+	logs.Debug("startChartMuseum called")
 
 	var args []string
 	args = append(args, "--gen-index")
