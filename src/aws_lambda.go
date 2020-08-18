@@ -23,7 +23,6 @@ import (
 
 var httpServer http.Server
 var logs *cm_logger.Logger
-var started bool
 
 
 func cliHandler(c *cli.Context) {
@@ -162,7 +161,7 @@ func startChartMuseum() {
 func waitForServer(){
 
 	logs.Debug("Waiting for http server to spin up")
-	for reflect.ValueOf(httpServer).IsZero() && !started {
+	for reflect.ValueOf(httpServer).IsZero() {
 		time.Sleep(100 * time.Millisecond)
 	}
 }
@@ -234,7 +233,7 @@ func main() {
 
 	logs.Debug("Lambda called")
 
-	if reflect.ValueOf(httpServer).IsZero() && !started {
+	if reflect.ValueOf(httpServer).IsZero() {
 		go startChartMuseum()
 	}
 
