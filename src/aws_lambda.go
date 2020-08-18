@@ -187,10 +187,10 @@ func handleRequest(req events.APIGatewayProxyRequest) (events.APIGatewayProxyRes
 		proxyRequest.Header.Add(key,element)
 	}
 
-	mockResponse := httptest.NewRecorder()
-	httpServer.Handler.ServeHTTP(mockResponse, proxyRequest)
+	responseRecorder := httptest.NewRecorder()
+	httpServer.Handler.ServeHTTP(responseRecorder, proxyRequest)
 
-	chartmuseumResult := mockResponse.Result()
+	chartmuseumResult := responseRecorder.Result()
 
 
 	buf := new(bytes.Buffer)
