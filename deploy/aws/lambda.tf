@@ -93,10 +93,13 @@ resource "aws_lambda_function" "chartmuseum" {
   runtime = "go1.x"
 
   environment {
-    variables = {
+    variables =
+    {
       STORAGE = "amazon"
       STORAGE_AMAZON_BUCKET = var.s3_bucket
       STORAGE_AMAZON_REGION = var.s3_bucket_region
+      BASIC_AUTH_USER = var.basic_auth_user
+      BASIC_AUTH_PASS = var.basic_auth_password
       LOG_LEVEL = upper(var.log_level)
     }
   }
