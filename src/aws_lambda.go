@@ -149,7 +149,7 @@ func startChartMuseum() {
 	logs.Debug("getHTTPServer called")
 
 	var args []string
-	args = append(args, "--start")
+	args = append(args, "--gen-index")
 	app := cli.NewApp()
 	app.Name = "ChartMuseum"
 	app.Version = fmt.Sprintf("%s", "v0.12.0")
