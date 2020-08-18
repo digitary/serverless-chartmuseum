@@ -93,8 +93,7 @@ resource "aws_lambda_function" "chartmuseum" {
   runtime = "go1.x"
 
   environment {
-    variables =
-    {
+    variables = {
       STORAGE = "amazon"
       STORAGE_AMAZON_BUCKET = var.s3_bucket
       STORAGE_AMAZON_REGION = var.s3_bucket_region
