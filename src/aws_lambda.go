@@ -4,6 +4,13 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"reflect"
+	"strings"
+	"time"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/chartmuseum/storage"
@@ -13,17 +20,10 @@ import (
 	cm_router "helm.sh/chartmuseum/pkg/chartmuseum/router"
 	mt "helm.sh/chartmuseum/pkg/chartmuseum/server/multitenant"
 	"helm.sh/chartmuseum/pkg/config"
-	"net/http"
-	"net/http/httptest"
-	"os"
-	"reflect"
-	"strings"
-	"time"
 )
 
 var httpServer http.Server
 var logs *cm_logger.Logger
-
 
 func cliHandler(c *cli.Context) {
 	logs.Debug("CLI handler called")
@@ -42,7 +42,6 @@ func cliHandler(c *cli.Context) {
 		conf.GetString("storage.amazon.endpoint"),
 		conf.GetString("storage.amazon.sse"),
 	)
-
 
 	logs.Debug("Creating Server options")
 	options := chartmuseum.ServerOptions{
@@ -90,26 +89,26 @@ func cliHandler(c *cli.Context) {
 
 	logs.Debug("Creating Router")
 	router := cm_router.NewRouter(cm_router.RouterOptions{
-		Logger:            logs,
-		Username:          options.Username,
-		Password:          options.Password,
-		ContextPath:       contextPath,
-		TlsCert:           options.TlsCert,
-		TlsKey:            options.TlsKey,
-		TlsCACert:         options.TlsCACert,
-		LogHealth:         options.LogHealth,
-		EnableMetrics:     options.EnableMetrics,
-		AnonymousGet:      options.AnonymousGet,
-		Depth:             options.Depth,
-		MaxUploadSize:     options.MaxUploadSize,
-		BearerAuth:        options.BearerAuth,
-		AuthRealm:         options.AuthRealm,
-		AuthService:       options.AuthService,
-		AuthCertPath:      options.AuthCertPath,
-		DepthDynamic:      options.DepthDynamic,
-		CORSAllowOrigin:   options.CORSAllowOrigin,
-		ReadTimeout:       options.ReadTimeout,
-		WriteTimeout:      options.WriteTimeout,
+		Logger:          logs,
+		Username:        options.Username,
+		Password:        options.Password,
+		ContextPath:     contextPath,
+		TlsCert:         options.TlsCert,
+		TlsKey:          options.TlsKey,
+		TlsCACert:       options.TlsCACert,
+		LogHealth:       options.LogHealth,
+		EnableMetrics:   options.EnableMetrics,
+		AnonymousGet:    options.AnonymousGet,
+		Depth:           options.Depth,
+		MaxUploadSize:   options.MaxUploadSize,
+		BearerAuth:      options.BearerAuth,
+		AuthRealm:       options.AuthRealm,
+		AuthService:     options.AuthService,
+		AuthCertPath:    options.AuthCertPath,
+		DepthDynamic:    options.DepthDynamic,
+		CORSAllowOrigin: options.CORSAllowOrigin,
+		ReadTimeout:     options.ReadTimeout,
+		WriteTimeout:    options.WriteTimeout,
 	})
 
 	logs.Debug("Creating Multi Tenant Server")
@@ -136,7 +135,7 @@ func cliHandler(c *cli.Context) {
 
 	httpServer = http.Server{
 		Addr:         fmt.Sprintf("%s:%d", "www.example.com", conf.GetInt("port")),
-		Handler:       router,
+		Handler:      router,
 		ReadTimeout:  router.ReadTimeout,
 		WriteTimeout: router.WriteTimeout,
 	}
@@ -158,7 +157,7 @@ func startChartMuseum() {
 	app.Run(args)
 }
 
-func waitForServer(){
+func waitForServer() {
 
 	logs.Debug("Waiting for http server to spin up")
 	for reflect.ValueOf(httpServer).IsZero() {
@@ -176,21 +175,20 @@ func handleRequest(req events.APIGatewayProxyRequest) (events.APIGatewayProxyRes
 
 	body := req.Body
 
-	if req.Path == "/api/charts" && req.HTTPMethod == "POST"{
+	if req.Path == "/api/charts" && req.HTTPMethod == "POST" {
 		decoded, _ := base64.StdEncoding.DecodeString(body)
 		body = string(decoded)
 	}
 
 	proxyRequest, _ := http.NewRequest(req.HTTPMethod, path, strings.NewReader(body))
 	for key, element := range req.Headers {
-		proxyRequest.Header.Add(key,element)
+		proxyRequest.Header.Add(key, element)
 	}
 
 	responseRecorder := httptest.NewRecorder()
 	httpServer.Handler.ServeHTTP(responseRecorder, proxyRequest)
 
 	chartmuseumResult := responseRecorder.Result()
-
 
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(chartmuseumResult.Body)
@@ -212,7 +210,7 @@ func handleRequest(req events.APIGatewayProxyRequest) (events.APIGatewayProxyRes
 	returnProxyResult.Body = chartmuseumResponseBody
 
 	// If GET request for a chart, base64 encode the result for api gateway to serve
-	if strings.Contains(req.Path, "/charts/") && req.HTTPMethod == "GET"{
+	if strings.Contains(req.Path, "/charts/") && req.HTTPMethod == "GET" {
 		chartmuseumResponseBody = base64.StdEncoding.EncodeToString([]byte(chartmuseumResponseBody))
 		returnProxyResult.Body = chartmuseumResponseBody
 		returnProxyResult.IsBase64Encoded = true
@@ -220,7 +218,7 @@ func handleRequest(req events.APIGatewayProxyRequest) (events.APIGatewayProxyRes
 
 	return returnProxyResult, nil
 }
-func debugEnabled() bool{
+func debugEnabled() bool {
 	return os.Getenv("LOG_LEVEL") == "DEBUG"
 }
 
